@@ -3,9 +3,10 @@ const pool = require('../config/db');
 const poblarProductos = async (request, response) => {
     try {
         // Fetch FakeStoreApi
+        console.log("Iniciando carga masiva de productos...");
         const apiFetch = await fetch('http://fakestoreapi.com/products');
         const products = await apiFetch.json();
-
+console.log(`Productos obtenidos: ${products.length}`);
         let inserciones = 0;
         // Destructurar el objeto
         for(const product of products){
@@ -18,7 +19,7 @@ const poblarProductos = async (request, response) => {
                 (nombre, precio, stock, descripcion, imagen_url)
                 VALUES ($1, $2, $3, $4, $5)
             `
-
+console.log(`Insertando producto: ${title}`);
             await pool.query(query, [title, price, stock, description, image]);
 
             inserciones++;
