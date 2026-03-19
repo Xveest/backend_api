@@ -35,5 +35,23 @@ console.log(`Insertando producto: ${title}`);
         response.status(500).json({error: error.message})
     }
 };
+const getProductos = async (request, response) => {
+    try {
+        const query = `
+            SELECT * FROM productos
+            ORDER BY nombre
+        `;
 
-module.exports = { poblarProductos };
+        const result = await pool.query(query); 
+
+        response.status(200).json({
+            cantidad: result.rows.length,
+            productos: result.rows
+        });
+    } catch (error) {
+        console.log(`Error: ${error}`);
+        response.status(500).json({ error: error.message });
+    }
+};
+
+module.exports = { poblarProductos, getProductos };
