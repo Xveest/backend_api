@@ -44,19 +44,28 @@ const buscarProductoPorNombre = async (request, response) => {
 
 const crearProducto = async (request, response) => {
     try {
-        const { nombre, precio, stock, descripcion, imagen_url, youtube_id } = request.body;
+        const { nombre, precio, stock, descripcion, imagen_url, youtube_id,latitud,longitud } = request.body;
 
         if (!nombre || !precio) {
             return response.status(400).json({ error: 'Los campos nombre y precio son requeridos' });
         }
 
         const query = 
-            `INSERT INTO productos (nombre, precio, stock, descripcion, imagen_url, youtube_id)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            `INSERT INTO productos (nombre, precio, stock, descripcion, imagen_url, youtube_id, latitud, longitud)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING *`
             ;
 
-        const result = await pool.query(query, [nombre, precio, stock || 0, descripcion || '', imagen_url || '', youtube_id || '']);
+        const result = await pool.query(query, [
+            nombre, 
+            precio, 
+            stock || 0, 
+            descripcion || null, 
+            imagen_url || null, 
+            youtube_id || null, 
+            latitud || null, 
+            longitud || null
+        ]);
 
         response.status(201).json({
             mensaje: 'Producto creado exitosamente',
